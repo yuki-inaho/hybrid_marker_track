@@ -83,7 +83,7 @@ bool TrackerCurvedot::track(const cv::Mat &cur_image)
 		if (!curr_asym_dots.empty())
 		{
 			// Asymmetric
-			asym_homography = cv::findHomography(asym_model_dots, curr_asym_dots, CV_RANSAC, square_size*2);
+			asym_homography = cv::findHomography(asym_model_dots, curr_asym_dots, cv::RANSAC, square_size*2);
 			isAsymTracking = false;
 			if (!binitAsymTracker)
 			{
@@ -94,7 +94,7 @@ bool TrackerCurvedot::track(const cv::Mat &cur_image)
 		if (!curr_sym_dots.empty())
 		{
 			// Symmetric
-			sym_homography = cv::findHomography(sym_model_dots, curr_sym_dots, CV_RANSAC, square_size*2);
+			sym_homography = cv::findHomography(sym_model_dots, curr_sym_dots, cv::RANSAC, square_size*2);
 			isSymTracking = false;
 			
 			if (!binitSymTracker)
@@ -492,7 +492,7 @@ bool TrackerCurvedot::TrackPattern(const cv::Mat& _cur_gray, cv::Mat& _sym_H, cv
 
 			std::vector<unsigned char> inliers;
 			if(mod_pts.size()>=4 && dsc_pts.size()>=4)
-				sym_H = cv::findHomography(mod_pts, dsc_pts, inliers, CV_RANSAC, square_size * 2.0);
+				sym_H = cv::findHomography(mod_pts, dsc_pts, inliers, cv::RANSAC, square_size * 2.0);
 
 
 			double count = 0;
@@ -541,7 +541,7 @@ bool TrackerCurvedot::TrackPattern(const cv::Mat& _cur_gray, cv::Mat& _sym_H, cv
 
 			std::vector<unsigned char> inliers;
 			if(mod_pts.size()>=4 && dsc_pts.size()>=4)
-				asym_H = cv::findHomography(mod_pts, dsc_pts, inliers, CV_RANSAC, square_size * 2.0);
+				asym_H = cv::findHomography(mod_pts, dsc_pts, inliers, cv::RANSAC, square_size * 2.0);
 
 
 			double count = 0;
@@ -587,18 +587,18 @@ void TrackerCurvedot::drawKeydots(cv::InputOutputArray _image)
 
 		for (unsigned int i = 0; i < curr_sym_dots.size(); i++)
 		{
-			cv::circle(image, curr_sym_dots[i], 4, sym_dot_colors[i], 1, CV_AA);
+			cv::circle(image, curr_sym_dots[i], 4, sym_dot_colors[i], 1, cv::LINE_AA);
 			cv::line(image, cv::Point2f(curr_sym_dots[i].x-3, curr_sym_dots[i].y), 
 				cv::Point2f(curr_sym_dots[i].x+3, curr_sym_dots[i].y), sym_dot_colors[i]);
 			cv::line(image,cv::Point2f( curr_sym_dots[i].x, curr_sym_dots[i].y-3),
 				cv::Point2f(curr_sym_dots[i].x, curr_sym_dots[i].y+3), sym_dot_colors[i] );
 		}
-// 		cv::circle(image, curr_sym_dots[0], 8, cv::Scalar(255, 10, 10), 2, CV_AA);
+// 		cv::circle(image, curr_sym_dots[0], 8, cv::Scalar(255, 10, 10), 2, cv::LINE_AA);
 
-		cv::line(image, curr_sym_corners[0], curr_sym_corners[1], sym_bgr, 2, CV_AA);
-		cv::line(image, curr_sym_corners[1], curr_sym_corners[2], sym_bgr, 2, CV_AA);
-		cv::line(image, curr_sym_corners[2], curr_sym_corners[3], sym_bgr, 2, CV_AA);
-		cv::line(image, curr_sym_corners[0], curr_sym_corners[3], sym_bgr, 2, CV_AA);
+		cv::line(image, curr_sym_corners[0], curr_sym_corners[1], sym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_sym_corners[1], curr_sym_corners[2], sym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_sym_corners[2], curr_sym_corners[3], sym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_sym_corners[0], curr_sym_corners[3], sym_bgr, 2, cv::LINE_AA);
 	}
 
 	if ((curr_state & (MID_CIR & TOP_CIR)) || (curr_state & (MID_CIR & BOT_CIR))
@@ -609,7 +609,7 @@ void TrackerCurvedot::drawKeydots(cv::InputOutputArray _image)
 
 		for (unsigned int i = 0; i < curr_asym_dots.size(); i++)
 		{
-			cv::circle(image, curr_asym_dots[i], 4, asym_dot_colors[i], 1, CV_AA);
+			cv::circle(image, curr_asym_dots[i], 4, asym_dot_colors[i], 1, cv::LINE_AA);
 			cv::line(image, cv::Point2f(curr_asym_dots[i].x-3, curr_asym_dots[i].y), 
 				cv::Point2f(curr_asym_dots[i].x+3, curr_asym_dots[i].y), asym_dot_colors[i]);
 			cv::line(image,cv::Point2f( curr_asym_dots[i].x, curr_asym_dots[i].y-3),
@@ -621,18 +621,18 @@ void TrackerCurvedot::drawKeydots(cv::InputOutputArray _image)
 			}
 		}
 
-		cv::line(image, curr_asym_corners[0], curr_asym_corners[1], asym_bgr, 2, CV_AA);
-		cv::line(image, curr_asym_corners[1], curr_asym_corners[2], asym_bgr, 2, CV_AA);
-		cv::line(image, curr_asym_corners[2], curr_asym_corners[3], asym_bgr, 2, CV_AA);
-		cv::line(image, curr_asym_corners[0], curr_asym_corners[3], asym_bgr, 2, CV_AA);
+		cv::line(image, curr_asym_corners[0], curr_asym_corners[1], asym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_asym_corners[1], curr_asym_corners[2], asym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_asym_corners[2], curr_asym_corners[3], asym_bgr, 2, cv::LINE_AA);
+		cv::line(image, curr_asym_corners[0], curr_asym_corners[3], asym_bgr, 2, cv::LINE_AA);
 
-// 		cv::circle(image, curr_asym_dots[0], 8, cv::Scalar(255, 0, 0), 2, CV_AA);
+// 		cv::circle(image, curr_asym_dots[0], 8, cv::Scalar(255, 0, 0), 2, cv::LINE_AA);
 	}
 	
 	if (!curr_chess_dots.empty())
 	{
 		for (auto i = 0; i < curr_chess_dots.size(); i++)
-			cv::circle(image, curr_chess_dots[i], 2, cv::Scalar(0, 255, 255), 2, CV_AA);	
+			cv::circle(image, curr_chess_dots[i], 2, cv::Scalar(0, 255, 255), 2, cv::LINE_AA);	
 
 // 		cv::Point pt1, pt2;
 // 		pt1.x = 10; pt1.y = (-m_chess_line[0] * pt1.x - m_chess_line[2])/m_chess_line[1];
@@ -699,7 +699,7 @@ std::vector<cv::Point2f> TrackerCurvedot::getP_img()
 cv::Vec3f TrackerCurvedot::get_chess_line()
 {
 	cv::Vec4f line_ps;
-	cv::fitLine(curr_chess_dots, line_ps, CV_DIST_L1, 0, 0.01, 0.01);
+	cv::fitLine(curr_chess_dots, line_ps, cv::DIST_L1, 0, 0.01, 0.01);
 
 	// Convert point-slope form to general form
 	auto m = line_ps[1] / line_ps[0];

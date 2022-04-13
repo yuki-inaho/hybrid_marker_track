@@ -80,8 +80,8 @@ bool TrackerKeydot::track(const cv::Mat &cur_image)
 	if (found)
 	{
 		std::vector<unsigned char> inls;
-		//homography = cv::findHomography(model_dots, curr_dots, inls, CV_RANSAC, square_size*0.5); 
-		homography = cv::findHomography(model_dots, curr_dots, CV_RANSAC, square_size*3, inls);
+		//homography = cv::findHomography(model_dots, curr_dots, inls, cv::RANSAC, square_size*0.5); 
+		homography = cv::findHomography(model_dots, curr_dots, cv::RANSAC, square_size*3, inls);
 
 		bisTracking = false;
 
@@ -178,7 +178,7 @@ bool TrackerKeydot::FindDots(cv::InputArray _image, cv::Size patternSize, cv::Ou
 		return !centers.empty();
 	}
 
-	CirclesGridFinderParameters parameters;
+	cv::CirclesGridFinderParameters parameters;
 	parameters.vertexPenalty = -0.6f;
 	parameters.vertexGain = 1;
 	parameters.existingVertexGain = 10000;
@@ -186,9 +186,9 @@ bool TrackerKeydot::FindDots(cv::InputArray _image, cv::Size patternSize, cv::Ou
 	parameters.edgePenalty = -0.6f;
 
 	if(flags & cv::CALIB_CB_ASYMMETRIC_GRID)
-		parameters.gridType = CirclesGridFinderParameters::ASYMMETRIC_GRID;
+		parameters.gridType = cv::CirclesGridFinderParameters::ASYMMETRIC_GRID;
 	if(flags & cv::CALIB_CB_SYMMETRIC_GRID)
-		parameters.gridType = CirclesGridFinderParameters::SYMMETRIC_GRID;
+		parameters.gridType = cv::CirclesGridFinderParameters::SYMMETRIC_GRID;
 
 	const int attempts = 2;
 	const size_t minHomographyPoints = 4;
@@ -212,14 +212,14 @@ bool TrackerKeydot::FindDots(cv::InputArray _image, cv::Size patternSize, cv::Ou
 		{
 			switch(parameters.gridType)
 			{
-			case CirclesGridFinderParameters::SYMMETRIC_GRID:
+			case cv::CirclesGridFinderParameters::SYMMETRIC_GRID:
 				boxFinder.getHoles(centers);
 				break;
-			case CirclesGridFinderParameters::ASYMMETRIC_GRID:
+			case cv::CirclesGridFinderParameters::ASYMMETRIC_GRID:
 				boxFinder.getAsymmetricHoles(centers);
 				break;
 			default:
-				CV_Error(CV_StsBadArg, "Unkown pattern type");
+				CV_Error(cv::Error::StsBadArg, "Unkown pattern type");
 			}
 
 			if (i != 0)
@@ -299,8 +299,8 @@ bool TrackerKeydot::TrackPattern(const cv::Mat& _cur_gray, std::vector<cv::Point
 		std::vector<unsigned char> inliers;
 		
 		if(mod_pts.size()>=4 && dsc_pts.size()>=4){
-			//_H = cv::findHomography(model_dots, _dots, inliers, CV_RANSAC, 0.8);
-			_H = cv::findHomography(mod_pts, dsc_pts, inliers, CV_RANSAC, 1.0);
+			//_H = cv::findHomography(model_dots, _dots, inliers, cv::RANSAC, 0.8);
+			_H = cv::findHomography(mod_pts, dsc_pts, inliers, cv::RANSAC, 1.0);
 		}
 		else
 			return false;
@@ -349,17 +349,17 @@ void TrackerKeydot::drawKeydots(cv::InputOutputArray _image)
 	
 	for (unsigned int i = 0; i < curr_dots.size(); i++)
 	{
-		cv::circle(image, curr_dots[i], 4, dot_colors[i], 1, CV_AA);
+		cv::circle(image, curr_dots[i], 4, dot_colors[i], 1, cv::LINE_AA);
 		cv::line(image, cv::Point2f(curr_dots[i].x-3, curr_dots[i].y), 
 			cv::Point2f(curr_dots[i].x+3, curr_dots[i].y), dot_colors[i]);
 		cv::line(image,cv::Point2f( curr_dots[i].x, curr_dots[i].y-3),
 			cv::Point2f(curr_dots[i].x, curr_dots[i].y+3), dot_colors[i] );
 	}
 
-	cv::line(image, curr_corners[0], curr_corners[1], bgr, 2, CV_AA);
-	cv::line(image, curr_corners[1], curr_corners[2], bgr, 2, CV_AA);
-	cv::line(image, curr_corners[2], curr_corners[3], bgr, 2, CV_AA);
-	cv::line(image, curr_corners[0], curr_corners[3], bgr, 2, CV_AA);
+	cv::line(image, curr_corners[0], curr_corners[1], bgr, 2, cv::LINE_AA);
+	cv::line(image, curr_corners[1], curr_corners[2], bgr, 2, cv::LINE_AA);
+	cv::line(image, curr_corners[2], curr_corners[3], bgr, 2, cv::LINE_AA);
+	cv::line(image, curr_corners[0], curr_corners[3], bgr, 2, cv::LINE_AA);
 
 }
 

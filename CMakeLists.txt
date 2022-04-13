@@ -15,7 +15,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(OpenCV_STATIC OFF)
 
 # Find OpenCV
-find_package( OpenCV REQUIRED )
+find_package( OpenCV 4.0 REQUIRED )
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # find_package(Qt5Widgets REQUIRED)
